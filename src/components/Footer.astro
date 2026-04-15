@@ -1,0 +1,18 @@
+---
+const today = new Date();
+---
+
+<footer>
+	<p>&copy; {today.getFullYear()} {` `}Antonio. Feito com Astro e hospedado no GitHub Pages.</p>
+</footer>
+<style>
+	footer {
+		padding: 3em 1em 5em 1em;
+		color: rgba(var(--muted-rgb), 0.9);
+		text-align: center;
+		border-top: 1px solid rgba(var(--border-rgb), 1);
+	}
+	p {
+		margin: 0;
+	}
+</style>

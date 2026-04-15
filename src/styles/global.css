@@ -1,0 +1,246 @@
+/*
+  The CSS in this style tag is based off of Bear Blog's default CSS.
+  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
+  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
+ */
+
+:root {
+	/* Retro arcade palette (more intense) */
+	--accent: #ff2bd6; /* magenta */
+	--accent-2: #00ff77; /* arcade green */
+	--accent-3: #22d3ee; /* cyan */
+	--hot: #ff3d3d; /* red */
+
+	--bg-rgb: 3, 4, 10;
+	--surface-rgb: 10, 12, 22;
+	--text-rgb: 235, 238, 245;
+	--muted-rgb: 170, 179, 196;
+	--border-rgb: 90, 110, 170;
+
+	--shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.18);
+	--shadow-md: 0 20px 55px rgba(0, 0, 0, 0.28);
+	--glow: 0 0 0 1px rgba(var(--border-rgb), 0.85), 0 0 30px rgba(255, 43, 214, 0.18),
+		0 0 22px rgba(0, 255, 119, 0.12), 0 0 18px rgba(34, 211, 238, 0.08);
+	--glow-strong: 0 0 0 1px rgba(255, 43, 214, 0.55), 0 0 42px rgba(255, 43, 214, 0.24),
+		0 0 34px rgba(0, 255, 119, 0.16);
+
+	--container: 1120px;
+	--font-display: 'Press Start 2P', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+}
+body {
+	font-family: var(--font-atkinson);
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	background:
+		radial-gradient(1100px 650px at 15% -10%, rgba(255, 43, 214, 0.26), transparent 60%),
+		radial-gradient(900px 560px at 85% 0%, rgba(34, 211, 238, 0.16), transparent 60%),
+		radial-gradient(900px 700px at 55% 115%, rgba(0, 255, 119, 0.12), transparent 62%),
+		radial-gradient(900px 700px at 50% 110%, rgba(255, 61, 61, 0.08), transparent 66%),
+		linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 42%),
+		rgb(var(--bg-rgb));
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	color: rgb(var(--text-rgb));
+	font-size: 20px;
+	line-height: 1.7;
+}
+
+/* subtle CRT/scanline overlay (non-intrusive) */
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(255, 255, 255, 0.03),
+		rgba(255, 255, 255, 0.03) 1px,
+		transparent 1px,
+		transparent 4px
+	);
+	mix-blend-mode: overlay;
+	opacity: 0.33;
+	z-index: 0;
+}
+body::after {
+	content: '';
+	position: fixed;
+	inset: -2px;
+	pointer-events: none;
+	background: radial-gradient(1200px 800px at 50% 10%, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
+	opacity: 0.6;
+	z-index: 0;
+}
+main,
+header,
+footer {
+	position: relative;
+	z-index: 1;
+}
+main {
+	width: var(--container);
+	max-width: calc(100% - 2em);
+	margin: 1.25rem auto 2.25rem;
+	padding: 3em 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.5rem 0;
+	color: rgb(var(--text-rgb));
+	line-height: 1.2;
+	text-shadow: 0 0 18px rgba(255, 43, 214, 0.12);
+}
+h1 {
+	font-size: 3.052em;
+}
+h2 {
+	font-size: 2.441em;
+}
+h3 {
+	font-size: 1.953em;
+}
+h4 {
+	font-size: 1.563em;
+}
+h5 {
+	font-size: 1.25em;
+}
+strong,
+b {
+	font-weight: 700;
+}
+a {
+	color: rgb(var(--text-rgb));
+	text-decoration-color: rgba(var(--muted-rgb), 0.55);
+	text-underline-offset: 0.18em;
+}
+a:hover {
+	text-decoration-color: rgba(var(--text-rgb), 0.9);
+}
+
+a:hover {
+	filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.22));
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: 2px solid rgba(34, 211, 238, 0.75);
+	outline-offset: 3px;
+}
+
+/* Retro display font for key UI */
+header nav a,
+header h2 a,
+button,
+.pill {
+	font-family: var(--font-display);
+	letter-spacing: 0.02em;
+}
+
+header nav a,
+header h2 a {
+	text-transform: uppercase;
+	font-size: 0.72rem;
+}
+
+/* Make the whole site feel like an arcade cabinet */
+main {
+	border: 1px solid rgba(var(--border-rgb), 0.75);
+	border-radius: 18px;
+	background: rgba(var(--surface-rgb), 0.35);
+	box-shadow: var(--glow);
+}
+
+@media (max-width: 720px) {
+	main {
+		border-radius: 14px;
+	}
+}
+p {
+	margin-bottom: 1em;
+}
+.prose p {
+	margin-bottom: 2em;
+}
+textarea {
+	width: 100%;
+	font-size: 16px;
+}
+input {
+	font-size: 16px;
+}
+table {
+	width: 100%;
+}
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+code {
+	padding: 2px 5px;
+	background-color: rgba(var(--surface-rgb), 1);
+	border: 1px solid rgba(var(--border-rgb), 1);
+	border-radius: 2px;
+}
+pre {
+	padding: 1.5em;
+	border-radius: 8px;
+	background: rgba(var(--surface-rgb), 1);
+	border: 1px solid rgba(var(--border-rgb), 1);
+	box-shadow: var(--glow-strong);
+}
+pre > code {
+	all: unset;
+}
+blockquote {
+	border-left: 4px solid rgba(var(--text-rgb), 0.55);
+	padding: 0 0 0 20px;
+	margin: 0;
+	font-size: 1.333em;
+}
+hr {
+	border: none;
+	border-top: 1px solid rgba(var(--border-rgb), 1);
+}
+
+/* Make "cards" feel more arcade */
+@supports selector(:has(*)) {
+	/* no-op, keeps file future-friendly */
+}
+@media (max-width: 720px) {
+	body {
+		font-size: 18px;
+	}
+	main {
+		margin: 0.85rem auto 1.5rem;
+		padding: 1em;
+	}
+}
+
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+	clip: rect(1px 1px 1px 1px);
+	/* maybe deprecated but we need to support legacy browsers */
+	clip: rect(1px, 1px, 1px, 1px);
+	/* modern browsers, clip-path works inwards from each corner */
+	clip-path: inset(50%);
+	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
+	white-space: nowrap;
+}

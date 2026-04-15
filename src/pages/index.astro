@@ -1,0 +1,181 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import CompactPostList from '../components/CompactPostList.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const allPosts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = allPosts.slice(0, 10);
+const base = import.meta.env.BASE_URL;
+
+function monthKey(d) {
+	const dt = new Date(d);
+	const year = dt.getFullYear();
+	const month = String(dt.getMonth() + 1).padStart(2, '0');
+	return `${year}-${month}`;
+}
+
+const categoriesMap = new Map();
+for (const post of allPosts) {
+	const c = post.data.category || post.data.platform || 'Outros';
+	categoriesMap.set(c, (categoriesMap.get(c) || 0) + 1);
+}
+const categories = [...categoriesMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+const archiveMap = new Map();
+for (const post of allPosts) {
+	const key = monthKey(post.data.pubDate);
+	archiveMap.set(key, (archiveMap.get(key) || 0) + 1);
+}
+const archive = [...archiveMap.entries()].sort((a, b) => b[0].localeCompare(a[0]));
+
+const monthLabel = (key) => {
+	const [y, m] = key.split('-').map(Number);
+	return new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				padding: 1.25rem 0 0.5rem;
+			}
+			.kicker {
+				color: rgba(var(--muted-rgb), 0.95);
+				margin: 0 0 0.5rem;
+				font-size: 1rem;
+			}
+			.hero h1 {
+				margin: 0;
+				font-size: clamp(2rem, 4vw, 3.1rem);
+				letter-spacing: -0.02em;
+				line-height: 1.05;
+			}
+			.sub {
+				margin: 0.85rem 0 0;
+				color: rgba(var(--muted-rgb), 0.95);
+				max-width: 62ch;
+			}
+			.layout {
+				margin-top: 1.75rem;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 320px;
+				gap: 1.5rem;
+				align-items: start;
+			}
+			.sidebar {
+				position: sticky;
+				top: 84px;
+				display: grid;
+				gap: 1rem;
+			}
+			.panel {
+				border: 1px solid rgba(var(--border-rgb), 1);
+				border-radius: 18px;
+				background: rgba(var(--surface-rgb), 0.72);
+				backdrop-filter: blur(12px);
+				box-shadow: var(--shadow-sm);
+				padding: 1rem;
+			}
+			.panel h2 {
+				font-size: 1rem;
+				margin: 0 0 0.75rem;
+			}
+			.links {
+				display: grid;
+				gap: 0.35rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.links a {
+				display: flex;
+				justify-content: space-between;
+				gap: 0.75rem;
+				padding: 0.35rem 0.4rem;
+				border-radius: 10px;
+				text-decoration: none;
+				color: rgba(var(--text-rgb), 0.92);
+			}
+			.links a:hover {
+				background: rgba(var(--surface-rgb), 1);
+			}
+			.count {
+				color: rgba(var(--muted-rgb), 0.95);
+				font-variant-numeric: tabular-nums;
+			}
+			.more {
+				margin-top: 0.75rem;
+			}
+			@media (max-width: 980px) {
+				.layout {
+					grid-template-columns: 1fr;
+				}
+				.sidebar {
+					position: static;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero">
+				<p class="kicker">Desafio Retrogamer — versão moderna</p>
+				<h1>Gameplays, dicas e reviews rápidas.</h1>
+				<p class="sub">
+					Posts simples de criar (um arquivo por gameplay), com embed do YouTube e imagens por link — perfeito pra
+					hospedar grátis no GitHub Pages.
+				</p>
+			</section>
+
+			<section aria-label="Recent posts">
+				<div class="layout">
+					<div>
+						<CompactPostList posts={posts} />
+						<p class="more">
+							<a href={`${base}blog/`}>Ver todos os posts →</a>
+						</p>
+					</div>
+					<aside class="sidebar" aria-label="Browse">
+						<section class="panel" aria-label="Categories">
+							<h2>Categorias</h2>
+							<ul class="links">
+								{categories.slice(0, 10).map(([c, n]) => (
+									<li>
+										<a href={`${base}categories/${encodeURIComponent(c)}/`}>
+											<span>{c}</span>
+											<span class="count">{n}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+							<p class="more"><a href={`${base}categories/`}>Ver todas →</a></p>
+						</section>
+
+						<section class="panel" aria-label="Archive">
+							<h2>Arquivo (mês/ano)</h2>
+							<ul class="links">
+								{archive.slice(0, 10).map(([k, n]) => (
+									<li>
+										<a href={`${base}archive/#${k}`}>
+											<span style="text-transform: capitalize">{monthLabel(k)}</span>
+											<span class="count">{n}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+							<p class="more"><a href={`${base}archive/`}>Ver arquivo completo →</a></p>
+						</section>
+					</aside>
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

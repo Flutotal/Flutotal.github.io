@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<ul class="list">
+	{posts.map((post) => (
+		<li class="item">
+			<a class="row" href={`${base}blog/${post.id}/`}>
+				<div class="thumb" aria-hidden="true">
+					{post.data.heroImage ? (
+						<img src={post.data.heroImage.src} alt="" loading="lazy" decoding="async" />
+					) : post.data.heroImageUrl ? (
+						<img src={post.data.heroImageUrl} alt="" loading="lazy" decoding="async" />
+					) : (
+						<div class="thumb-fallback" />
+					)}
+				</div>
+				<div class="body">
+					<div class="top">
+						<h3 class="title">{post.data.title}</h3>
+						{post.data.category && <span class="pill">{post.data.category}</span>}
+					</div>
+					<div class="meta">
+						<span class="date"><FormattedDate date={post.data.pubDate} /></span>
+						{post.data.game && <span class="dot">•</span>}
+						{post.data.game && <span class="game">🎮 {post.data.game}</span>}
+						{post.data.platform && <span class="dot">•</span>}
+						{post.data.platform && <span class="platform">🕹️ {post.data.platform}</span>}
+					</div>
+					{post.data.description ? <p class="desc">{post.data.description}</p> : null}
+				</div>
+			</a>
+		</li>
+	))}
+</ul>
+
+<style>
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+	.item {
+		border: 1px solid rgba(var(--border-rgb), 1);
+		border-radius: 16px;
+		background: rgba(var(--surface-rgb), 0.72);
+		backdrop-filter: blur(12px);
+		box-shadow: var(--shadow-sm);
+		overflow: hidden;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 132px 1fr;
+		gap: 0.9rem;
+		padding: 0.85rem;
+		text-decoration: none;
+		color: inherit;
+	}
+	.thumb {
+		border-radius: 14px;
+		overflow: hidden;
+		aspect-ratio: 16 / 10;
+		border: 1px solid rgba(var(--border-rgb), 1);
+		background: rgba(var(--surface-rgb), 1);
+	}
+	.thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.thumb-fallback {
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(135deg, rgba(124, 92, 255, 0.25), rgba(34, 197, 94, 0.12));
+	}
+	.body {
+		min-width: 0;
+	}
+	.top {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+	.title {
+		margin: 0;
+		font-size: 1.05rem;
+		line-height: 1.2;
+		letter-spacing: -0.01em;
+	}
+	.pill {
+		flex: 0 0 auto;
+		border: 1px solid rgba(var(--border-rgb), 1);
+		border-radius: 999px;
+		padding: 0.25rem 0.55rem;
+		background: rgba(var(--surface-rgb), 0.7);
+		color: rgba(var(--text-rgb), 0.92);
+		font-size: 0.82rem;
+		line-height: 1;
+		white-space: nowrap;
+	}
+	.meta {
+		margin: 0.35rem 0 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem 0.5rem;
+		color: rgba(var(--muted-rgb), 0.95);
+		font-size: 0.9rem;
+	}
+	.dot {
+		opacity: 0.7;
+	}
+	.desc {
+		margin: 0.45rem 0 0;
+		color: rgba(var(--text-rgb), 0.72);
+		font-size: 0.95rem;
+		line-height: 1.45;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.item:hover {
+		transform: translateY(-1px);
+		box-shadow: var(--shadow-md);
+	}
+	.item,
+	.item * {
+		transition: 180ms ease;
+	}
+
+	@media (max-width: 620px) {
+		.row {
+			grid-template-columns: 1fr;
+		}
+		.thumb {
+			aspect-ratio: 16 / 9;
+		}
+	}
+</style>

@@ -1,0 +1,69 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<header>
+	<nav>
+		<h2><a href={base}>{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href={base}>Home</HeaderLink>
+			<HeaderLink href={`${base}blog/`}>Blog</HeaderLink>
+			<HeaderLink href={`${base}categories/`}>Categorias</HeaderLink>
+			<HeaderLink href={`${base}archive/`}>Arquivo</HeaderLink>
+			<HeaderLink href={`${base}about/`}>About</HeaderLink>
+		</div>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background:
+			linear-gradient(90deg, rgba(255, 43, 214, 0.14), transparent 45%, rgba(0, 255, 119, 0.12)),
+			rgba(var(--bg-rgb), 0.82);
+		backdrop-filter: blur(14px);
+		border-bottom: 1px solid rgba(var(--border-rgb), 1);
+		box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+	}
+	h2 {
+		margin: 0;
+		font-size: 0.95em;
+		letter-spacing: 0.02em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		max-width: var(--container);
+		margin: 0 auto;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: rgba(var(--text-rgb), 0.92);
+		border-bottom: 2px solid transparent;
+		text-decoration: none;
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: rgba(34, 211, 238, 0.85);
+		text-shadow: 0 0 14px rgba(34, 211, 238, 0.25);
+	}
+	nav a:hover {
+		text-shadow: 0 0 14px rgba(255, 43, 214, 0.18);
+	}
+	.internal-links {
+		display: flex;
+		gap: 0.25rem;
+	}
+</style>
