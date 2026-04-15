@@ -6,38 +6,22 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <header>
-	<nav class="site-nav" data-menu-open="false">
+	<nav class="site-nav">
 		<h2><a href={base}>{SITE_TITLE}</a></h2>
-		<button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
-			<span aria-hidden="true">☰</span>
-		</button>
-		<div class="internal-links" id="site-menu">
-			<HeaderLink href={base}>Home</HeaderLink>
-			<HeaderLink href={`${base}blog/`}>Blog</HeaderLink>
-			<HeaderLink href={`${base}categories/`}>Categorias</HeaderLink>
-			<HeaderLink href={`${base}archive/`}>Arquivo</HeaderLink>
-			<HeaderLink href={`${base}about/`}>About</HeaderLink>
-		</div>
+		<details class="menu">
+			<summary class="menu-toggle" aria-label="Abrir menu">
+				<span aria-hidden="true">☰</span>
+			</summary>
+			<div class="internal-links">
+				<HeaderLink href={base}>Home</HeaderLink>
+				<HeaderLink href={`${base}blog/`}>Blog</HeaderLink>
+				<HeaderLink href={`${base}categories/`}>Categorias</HeaderLink>
+				<HeaderLink href={`${base}archive/`}>Arquivo</HeaderLink>
+				<HeaderLink href={`${base}about/`}>About</HeaderLink>
+			</div>
+		</details>
 	</nav>
 </header>
-<script>
-	(() => {
-		const nav = document.querySelector('nav.site-nav');
-		const btn = document.querySelector('nav.site-nav .menu-toggle');
-		if (!(nav instanceof HTMLElement) || !(btn instanceof HTMLButtonElement)) return;
-
-		const setOpen = (open) => {
-			nav.dataset.menuOpen = open ? 'true' : 'false';
-			btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-			btn.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
-		};
-
-		btn.addEventListener('click', () => setOpen(nav.dataset.menuOpen !== 'true'));
-		window.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') setOpen(false);
-		});
-	})();
-</script>
 <style>
 	header {
 		margin: 0;
@@ -71,6 +55,9 @@ const base = import.meta.env.BASE_URL;
 		margin: 0 auto;
 		position: relative;
 	}
+	.menu {
+		margin: 0;
+	}
 	nav a {
 		padding: 1em 0.5em;
 		color: rgba(var(--text-rgb), 0.92);
@@ -102,10 +89,20 @@ const base = import.meta.env.BASE_URL;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 		cursor: pointer;
 	}
+	.menu-toggle::-webkit-details-marker {
+		display: none;
+	}
+	.menu-toggle {
+		list-style: none;
+	}
 
 	@media (max-width: 720px) {
 		.menu-toggle {
 			display: inline-flex;
+		}
+
+		.menu {
+			position: relative;
 		}
 
 		.internal-links {
@@ -123,7 +120,7 @@ const base = import.meta.env.BASE_URL;
 			box-shadow: var(--glow);
 		}
 
-		nav[data-menu-open='true'] .internal-links {
+		.menu[open] .internal-links {
 			display: flex;
 		}
 
