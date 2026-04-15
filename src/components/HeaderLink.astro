@@ -4,9 +4,28 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+
+const base = import.meta.env.BASE_URL || '/';
+
+function normalizePath(p: string) {
+	// remove BASE_URL prefix, leading/trailing slashes
+	const noBase = p.startsWith(base) ? p.slice(base.length) : p;
+	return noBase.replace(/^\/+|\/+$/g, '');
+}
+
+// Current page: first segment, eg "blog" in "/blog/post-x"
+const current = normalizePath(Astro.url.pathname);
+const currentSeg = current.split('/')[0] || '';
+
+// Link target: first segment (supports absolute/relative hrefs)
+let hrefSeg = '';
+if (typeof href === 'string') {
+	const u = new URL(href, Astro.url);
+	hrefSeg = normalizePath(u.pathname).split('/')[0] || '';
+}
+
+// Home: active when you're on root (no segment)
+const isActive = hrefSeg === '' ? currentSeg === '' : currentSeg === hrefSeg;
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>

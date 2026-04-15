@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL;
 <header>
 	<nav class="site-nav">
 		<h2><a href={base}>{SITE_TITLE}</a></h2>
-		<details class="menu">
+		<details class="menu" open>
 			<summary class="menu-toggle" aria-label="Abrir menu">
 				<span aria-hidden="true">☰</span>
 			</summary>
@@ -22,10 +22,43 @@ const base = import.meta.env.BASE_URL;
 		</details>
 	</nav>
 </header>
+<script>
+	(() => {
+		const init = () => {
+			const nav = document.querySelector('nav.site-nav');
+			if (!nav) return;
+
+			const details = nav.querySelector('details.menu');
+			if (!(details instanceof HTMLDetailsElement)) return;
+
+			// Avoid stacking listeners on client-side navigations.
+			if (details.dataset.inited === 'true') return;
+			details.dataset.inited = 'true';
+
+			const mq = window.matchMedia('(max-width: 720px)');
+			const sync = () => {
+				if (mq.matches) details.removeAttribute('open');
+				else details.setAttribute('open', '');
+			};
+			sync();
+			mq.addEventListener?.('change', sync);
+
+			nav.addEventListener('click', (e) => {
+				if (!mq.matches) return;
+				const a = (e.target instanceof Element ? e.target.closest('a') : null);
+				if (a) details.removeAttribute('open');
+			});
+		};
+
+		init();
+		document.addEventListener('astro:page-load', init);
+		document.addEventListener('astro:after-swap', init);
+	})();
+</script>
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
+		padding: 0.25rem 1em;
 		position: sticky;
 		top: 0;
 		z-index: 50;
@@ -76,6 +109,11 @@ const base = import.meta.env.BASE_URL;
 		display: flex;
 		gap: 0.25rem;
 	}
+	.internal-links :global(a.active) {
+		background: rgba(var(--surface-rgb), 0.55);
+		border-radius: 12px;
+		box-shadow: 0 0 0 1px rgba(var(--border-rgb), 0.55) inset, 0 0 20px rgba(34, 211, 238, 0.08);
+	}
 
 	.menu-toggle {
 		display: none;
@@ -99,25 +137,34 @@ const base = import.meta.env.BASE_URL;
 	@media (max-width: 720px) {
 		.menu-toggle {
 			display: inline-flex;
+			margin: 0.2rem 0;
 		}
 
 		.menu {
 			position: relative;
+			display: inline-flex;
+			justify-content: flex-end;
 		}
 
 		.internal-links {
 			display: none;
 			position: absolute;
 			top: calc(100% + 0.35rem);
-			left: 0;
-			right: 0;
+			left: 1rem;
+			right: 1rem;
+			box-sizing: border-box;
+			width: auto;
+			max-width: 360px;
+			min-width: min(260px, calc(100vw - 2rem));
+			margin-left: auto;
 			flex-direction: column;
 			gap: 0;
-			padding: 0.25rem;
+			padding: 0.4rem;
 			border-radius: 14px;
 			border: 1px solid rgba(var(--border-rgb), 1);
 			background: rgba(var(--surface-rgb), 0.92);
 			box-shadow: var(--glow);
+			overflow: hidden;
 		}
 
 		.menu[open] .internal-links {
@@ -125,12 +172,34 @@ const base = import.meta.env.BASE_URL;
 		}
 
 		.internal-links :global(a) {
-			padding: 0.9rem 0.85rem;
-			border-bottom: 1px solid rgba(var(--border-rgb), 0.45);
+			display: block;
+			width: auto;
+			box-sizing: border-box;
+			padding: 0.85rem 0.9rem;
+			margin: 0.15rem;
+			border-bottom: 0;
+			border-bottom-color: transparent;
+			text-align: left;
+			line-height: 1.25;
+			white-space: normal;
+			text-wrap: pretty;
+			word-break: normal;
+			overflow-wrap: anywhere;
+			text-shadow: none;
+		}
+		.internal-links :global(a:not(:last-child)) {
+			box-shadow: 0 -1px 0 rgba(var(--border-rgb), 0.35) inset;
+		}
+		.internal-links :global(a.active) {
+			background: rgba(34, 211, 238, 0.12);
+			border-radius: 10px;
+			box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.35) inset;
+			border-bottom: 0 !important;
+			text-shadow: none;
 		}
 
 		.internal-links :global(a:last-child) {
-			border-bottom: 0;
+			/* no divider */
 		}
 	}
 </style>
