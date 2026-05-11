@@ -13,7 +13,7 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
@@ -101,9 +101,9 @@ const base = import.meta.env.BASE_URL;
 								<a href={`${base}blog/${post.id}/`}>
 									<div class="thumb">
 										{post.data.heroImage ? (
-											<img src={post.data.heroImage.src} alt={`Capa do post ${post.data.title}`} loading="lazy" decoding="async" />
+											<img src={post.data.heroImage.src} alt="" loading="lazy" decoding="async" />
 										) : post.data.heroImageUrl ? (
-											<img src={post.data.heroImageUrl} alt={`Capa do post ${post.data.title}`} loading="lazy" decoding="async" />
+											<img src={post.data.heroImageUrl} alt="" loading="lazy" decoding="async" />
 										) : null}
 									</div>
 									<div class="body">

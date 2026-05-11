@@ -37,13 +37,8 @@ jobs:
         run: |
           set -euo pipefail
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          if [ "$REPO_NAME" = "${GITHUB_REPOSITORY_OWNER}.github.io" ]; then
-            DEFAULT_SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/"
-            DEFAULT_BASE_PATH="/"
-          else
-            DEFAULT_SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/"
-            DEFAULT_BASE_PATH="/${REPO_NAME}/"
-          fi
+          DEFAULT_SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/"
+          DEFAULT_BASE_PATH="/${REPO_NAME}/"
 
           export SITE_URL="${SITE_URL:-$DEFAULT_SITE_URL}"
           export BASE_PATH="${BASE_PATH:-$DEFAULT_BASE_PATH}"
