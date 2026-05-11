@@ -69,9 +69,31 @@ body::after {
 	position: fixed;
 	inset: -2px;
 	pointer-events: none;
-	background: radial-gradient(1200px 800px at 50% 10%, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
-	opacity: 0.6;
+	background:
+		linear-gradient(180deg, rgba(1, 2, 6, 0.75), rgba(1, 2, 6, 0.8)),
+		url('../assets/blog-placeholder-1.jpg') 4% 10% / 26rem auto no-repeat,
+		url('../assets/blog-placeholder-2.jpg') 96% 12% / 24rem auto no-repeat,
+		url('../assets/blog-placeholder-3.jpg') 12% 56% / 25rem auto no-repeat,
+		url('../assets/blog-placeholder-4.jpg') 88% 56% / 24rem auto no-repeat,
+		url('../assets/blog-placeholder-5.jpg') 50% 90% / 28rem auto no-repeat,
+		radial-gradient(1200px 800px at 50% 10%, transparent 55%, rgba(0, 0, 0, 0.72) 100%);
+	background-blend-mode: normal, screen, screen, screen, screen, screen, normal;
+	opacity: 0.28;
+	filter: saturate(1.1) contrast(1.1);
 	z-index: 0;
+}
+@media (max-width: 900px) {
+	body::after {
+		background:
+			linear-gradient(180deg, rgba(1, 2, 6, 0.8), rgba(1, 2, 6, 0.84)),
+			url('../assets/blog-placeholder-1.jpg') 50% 7% / 22rem auto no-repeat,
+			url('../assets/blog-placeholder-2.jpg') 50% 34% / 20rem auto no-repeat,
+			url('../assets/blog-placeholder-3.jpg') 50% 62% / 21rem auto no-repeat,
+			url('../assets/blog-placeholder-4.jpg') 50% 90% / 20rem auto no-repeat,
+			radial-gradient(1200px 800px at 50% 10%, transparent 55%, rgba(0, 0, 0, 0.78) 100%);
+		background-blend-mode: normal, screen, screen, screen, screen, normal;
+		opacity: 0.24;
+	}
 }
 main,
 header,
