@@ -27,7 +27,7 @@ const {
 const coverUrl = heroImageUrl || undefined;
 ---
 
-<html lang="en">
+<html lang="pt-BR">
 	<head>
 		<BaseHead title={title} description={description} image={heroImage} imageUrl={coverUrl} />
 		<style>
@@ -122,8 +122,8 @@ const coverUrl = heroImageUrl || undefined;
 					{(youtubeId || youtubeUrl) && (
 						<YouTubeEmbed id={youtubeId} url={youtubeUrl} title={title} />
 					)}
-					{!(youtubeId || youtubeUrl) && heroImage && <Image width={1200} height={675} src={heroImage} alt="" />}
-					{!(youtubeId || youtubeUrl) && heroImageUrl && <img src={heroImageUrl} alt="" loading="lazy" decoding="async" />}
+					{!(youtubeId || youtubeUrl) && heroImage && <Image width={1200} height={675} src={heroImage} alt={`Capa do post ${title}`} />}
+					{!(youtubeId || youtubeUrl) && heroImageUrl && <img src={heroImageUrl} alt={`Capa do post ${title}`} loading="lazy" decoding="async" />}
 				</div>
 				<div class="prose">
 					<div class="title">
@@ -153,9 +153,9 @@ const coverUrl = heroImageUrl || undefined;
 						<section aria-label="Gameplay screenshots">
 							<h2>Imagens</h2>
 							<div class="gallery">
-								{images.map((src) => (
+								{images.map((src, index) => (
 									<a href={src} target="_blank" rel="noreferrer">
-										<img src={src} alt="" loading="lazy" decoding="async" />
+										<img src={src} alt={`Screenshot ${index + 1} de ${title}`} loading="lazy" decoding="async" />
 									</a>
 								))}
 							</div>
